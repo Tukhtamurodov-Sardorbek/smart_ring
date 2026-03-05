@@ -1,0 +1,34 @@
+name: core
+publish_to: "none"
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  get_it: ^8.2.0
+  injectable: ^2.5.1
+  auto_route: ^10.1.0+1
+  equatable: ^2.0.7
+  permission_handler: ^12.0.1
+  package_info_plus: ^8.3.0
+  device_info_plus: ^11.5.0
+  android_id: ^0.4.0
+
+  ble2301:
+    git:
+      url: https://github.com/Tukhtamurodov-Sardorbek/ble2301.git
+  flutter_blue_elves:
+    git:
+      url: https://github.com/Tukhtamurodov-Sardorbek/flutter_blue_elves.git
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  injectable_generator: ^2.8.1

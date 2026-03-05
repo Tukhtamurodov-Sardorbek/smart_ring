@@ -1,0 +1,22 @@
+# melos_managed_dependency_overrides: app_bloc,app_route,core,database,design_system,entry_feature,model,remote,repository,usecase
+dependency_overrides:
+  app_bloc:
+    path: ../../app/app_bloc
+  app_route:
+    path: ../../app/app_route
+  core:
+    path: ../../domain/core
+  database:
+    path: ../../data/database
+  design_system:
+    path: ../../app/design_system
+  entry_feature:
+    path: ../entry_feature
+  model:
+    path: ../../domain/model
+  remote:
+    path: ../../data/remote
+  repository:
+    path: ../../domain/repository
+  usecase:
+    path: ../../domain/usecase

@@ -1,0 +1,81 @@
+# https://medium.com/flutter-community/managing-multi-package-flutter-projects-with-melos-c8ce96fa7c82
+name: smart_ring
+
+packages:
+  - layers/app/**
+  - layers/data/**
+  - layers/domain/**
+  - layers/features/**
+  - '*'
+
+scripts:
+  analyze:
+    run: melos exec -- flutter analyze .
+    description: Run `flutter analyze` in all packages.
+
+  get:
+    run: |
+      flutter pub get
+      melos exec --concurrency=1 --fail-fast --no-flutter -- pub get
+      melos exec --concurrency=1 --fail-fast --flutter -- flutter pub get
+    description: Get all Dart and Flutter package dependencies across the workspace.
+
+  clean:
+    run: |
+      flutter clean
+      melos exec -- flutter clean
+    description: Clean build artifacts in the root and all packages.
+
+  builder:
+    run: melos exec -- dart run build_runner build --delete-conflicting-outputs
+    select-package:
+      depends-on: build_runner
+      scope:
+        - core
+        - app_route
+        - database
+        - remote
+        - repository
+        - usecase
+        - app_bloc
+    description: Run build_runner generation
+
+  builder_ui:
+    run: melos exec -- dart run build_runner build --delete-conflicting-outputs
+    select-package:
+      scope:
+        - entry_feature
+        - home_feature
+    description: Run build_runner generation
+
+  builder_app_bloc:
+    run: melos exec --scope=app_bloc -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for app_bloc
+
+  builder_app_route:
+    run: melos exec --scope=app_route -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for route
+
+  builder_remote:
+    run: melos exec --scope=remote -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for remote
+
+  builder_database:
+    run: melos exec --scope=database -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for database
+
+  builder_core:
+    run: melos exec --scope=core -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for core
+
+  builder_repository:
+    run: melos exec --scope=repository -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for repository
+
+  builder_usecase:
+    run: melos exec --scope=usecase -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner generation for usecase
+
+  format:
+    run: dart format --set-exit-if-changed .
+    description: run `dart format --set-exit-if-changed .` in all packages

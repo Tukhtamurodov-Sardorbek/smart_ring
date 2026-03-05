@@ -1,0 +1,14 @@
+# melos_managed_dependency_overrides: core,database,model,remote,repository,usecase
+dependency_overrides:
+  core:
+    path: ../../domain/core
+  database:
+    path: ../../data/database
+  model:
+    path: ../../domain/model
+  remote:
+    path: ../../data/remote
+  repository:
+    path: ../../domain/repository
+  usecase:
+    path: ../../domain/usecase

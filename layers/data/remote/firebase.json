@@ -1,0 +1,14 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "hiring-platform-web",
+          "configurations": {
+            "web": "1:618377543003:web:433e7f236a2f5c62ceee7e"
+          }
+        }
+      }
+    }
+  }
+}
