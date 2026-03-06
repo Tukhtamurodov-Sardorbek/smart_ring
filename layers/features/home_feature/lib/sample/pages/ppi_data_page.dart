@@ -1,3 +1,4 @@
+
 import 'package:ble2301/ble_sdk.dart';
 import 'package:ble2301/utils/ble_const.dart';
 import 'package:ble2301/utils/device_key.dart';
@@ -8,14 +9,14 @@ import 'package:get/get.dart';
 import '../util/app_all_value.dart';
 import '../util/event_bus.dart';
 
-class PPIDataPage extends StatefulWidget {
-  const PPIDataPage({Key? key}) : super(key: key);
+class PPIDataPage extends StatefulWidget{
+  const PPIDataPage ({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _PPIDataPageState();
 }
 
-class _PPIDataPageState extends State<PPIDataPage> {
-  int modeRead = 0;
+class _PPIDataPageState extends State<PPIDataPage>{
+  int modeRead= 0;
   AppAllValueController controller = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -29,36 +30,32 @@ class _PPIDataPageState extends State<PPIDataPage> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: ElevatedButton(
-                    child: Text('读取最近的PPI数据'.tr),
-                    onPressed: () {
-                      Future.delayed(Duration.zero, () {
-                        controller.showLoadDialog('同步中'.tr);
-                      });
-                      list = [];
-                      getDetailData(0);
-                    },
-                  ),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(left: 10,right: 10),
+                child: ElevatedButton(
+                  child: Text('读取最近的PPI数据'.tr),
+                  onPressed: (){
+                    Future.delayed(Duration.zero,(){
+                      controller.showLoadDialog('同步中'.tr);
+                    });
+                    list = [];
+                    getDetailData(0);
+                  },
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: ElevatedButton(
-                    child: Text('获取上段数据'.tr),
-                    onPressed: () {
-                      Future.delayed(Duration.zero, () {
-                        controller.showLoadDialog('同步中'.tr);
-                      });
-                      list = [];
-                      getDetailData(2);
-                    },
-                  ),
+              )),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(left: 10,right: 10),
+                child: ElevatedButton(
+                  child: Text('获取上段数据'.tr),
+                  onPressed: (){
+                    Future.delayed(Duration.zero,(){
+                      controller.showLoadDialog('同步中'.tr);
+                    });
+                    list = [];
+                    getDetailData(2);
+                  },
                 ),
-              ),
+              ))
             ],
           ),
           // Container(
@@ -74,45 +71,42 @@ class _PPIDataPageState extends State<PPIDataPage> {
           //     },
           //   ),
           // ),
-          Expanded(
-            child: list.isEmpty
-                ? Container(alignment: Alignment.center, child: Text('无数据'.tr))
-                : ListView.builder(
-                    padding: const EdgeInsets.only(top: 10),
-                    shrinkWrap: true,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          top: 10,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(list[index].toString()),
-                            Container(height: 1, color: Colors.grey),
-                          ],
-                        ),
-                      );
-                    },
+          Expanded(child: list.isEmpty?Container(
+            alignment: Alignment.center,
+            child: Text('无数据'.tr),
+          ):ListView.builder(
+              padding: const EdgeInsets.only(top: 10),
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (context,index){
+                return Container(
+                  padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(list[index].toString()),
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                      )
+                    ],
                   ),
-          ),
+                );
+              }
+          ))
         ],
       ),
     );
   }
-
   int dataCount = 0;
   List<Map> list = [];
-
   ///2：继续上次读的位置下一段数据
-  int modeContinue = 2;
+  int modeContinue=2;
   @override
   void initState() {
     super.initState();
-    EventBus().on('dataCallBack', (arg) {
+    EventBus().on('dataCallBack', (arg)
+    {
       Map map = arg;
       bool finish = map[DeviceKey.End];
       switch (map[DeviceKey.DataType] as String) {
@@ -120,16 +114,18 @@ class _PPIDataPageState extends State<PPIDataPage> {
           list.addAll(map[DeviceKey.Data] as List<Map>);
 
           dataCount++;
-          if (finish) {
+          if(finish){
             controller.dismissDialog();
-            setState(() {});
+            setState(() {
+            });
           }
-          if (dataCount == 50) {
+          if(dataCount == 50){
             dataCount = 0;
-            if (finish) {
+            if(finish){
               controller.dismissDialog();
-              setState(() {});
-            } else {
+              setState(() {
+              });
+            }else{
               getDetailData(modeContinue);
             }
           }
@@ -139,7 +135,7 @@ class _PPIDataPageState extends State<PPIDataPage> {
   }
 
   ///获取数据
-  void getDetailData(int status) {
+  void getDetailData(int status){
     controller.writeData(BleSDK.GetPPIDDataWithMode(status));
   }
 
@@ -148,4 +144,6 @@ class _PPIDataPageState extends State<PPIDataPage> {
     super.dispose();
     EventBus().off('dataCallBack');
   }
+
+
 }

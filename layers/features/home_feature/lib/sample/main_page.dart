@@ -19,7 +19,6 @@ import 'util/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:home_feature/sample/util/app_all_value.dart';
 
 import 'pages/ppg_page.dart';
 import 'pages/sport_mode_page.dart';
@@ -111,7 +110,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin{
   Widget build(BuildContext context) {
     super.build(context);
     return GetBuilder<AppAllValueController>(
-        init: controller,
+      init: controller,
         builder: (controller){
           return Scaffold(
             appBar: AppBar(

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:core/core.dart';
 import 'package:home_feature/sample/util/message.dart';
 
 import 'main_page.dart';
@@ -7,6 +6,7 @@ import 'models.dart';
 import 'util/app_all_value.dart';
 import 'util/shared_preferences_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_elves/flutter_blue_elves.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get.dart';
 
@@ -14,21 +14,24 @@ import 'package:get/get.dart';
 class ScanPage extends StatefulWidget {
   const ScanPage._({super.key});
 
-  @override
-  State<ScanPage> createState() => _ScanPageState();
-
   static Widget get page {
     return GetMaterialApp(
       title: 'TestDemo',
       translations: Messages(),
+      // 你的翻译
       locale: const Locale('en', 'US'),
+      //const Locale('en', 'US') // 将会按照此处指定的语言翻译
       fallbackLocale: const Locale('zh', 'CN'),
-      // fallbackLocale:const Locale('en', 'US'),
+      // 添加一个回调语言选项，以备上面指定的语言翻译不存在
+      // fallbackLocale:const Locale('en', 'US'), // 添加一个回调语言选项，以备上面指定的语言翻译不存在
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blue),
       home: ScanPage._(),
     );
   }
+
+  @override
+  State<ScanPage> createState() => _ScanPageState();
 }
 
 class _ScanPageState extends State<ScanPage> {
@@ -68,27 +71,36 @@ class _ScanPageState extends State<ScanPage> {
       context: context,
       builder: (context) {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           body: GestureDetector(
-            child: SizedBox(
-              width: 400,
-              height: 200,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    height: 40,
-                    color: Colors.blue,
-                    child: const Text('Filler'),
-                  ),
-                  TextField(
-                    controller: textEditingController,
-                    textAlign: TextAlign.center,
-                    onChanged: (text) {
-                      SpUtils.putString("filler", text);
-                    },
-                  ),
-                ],
+            child: Container(
+              alignment: Alignment.center,
+              color: Colors.transparent,
+              child: Container(
+                width: 400,
+                height: 200,
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      height: 40,
+                      color: Colors.blue,
+                      child: Text(
+                        'Filler',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    TextField(
+                      controller: textEditingController,
+                      textAlign: TextAlign.center,
+                      onChanged: (text) {
+                        SpUtils.putString("filler", text);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
             onTap: () {
@@ -285,7 +297,8 @@ class _ScanPageState extends State<ScanPage> {
   ///构建设备Item布局
   Widget buildDeviceItem(int index) {
     return GestureDetector(
-      child: SizedBox(
+      child: Container(
+        color: Colors.white,
         height: 60,
         child: Stack(
           children: [
@@ -294,10 +307,7 @@ class _ScanPageState extends State<ScanPage> {
               alignment: Alignment.topLeft,
               child: Text(
                 blueinfos[index].name ?? "No Name",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             Container(
@@ -305,7 +315,7 @@ class _ScanPageState extends State<ScanPage> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 'mac: ${blueinfos[index].mac ?? "No Mac"}',
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
             ),
             Container(
@@ -313,7 +323,7 @@ class _ScanPageState extends State<ScanPage> {
               alignment: Alignment.bottomRight,
               child: Text(
                 'rssi: ${blueinfos[index].rssi ?? "No Rssi"}',
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
             ),
             Align(
@@ -341,7 +351,7 @@ class _ScanPageState extends State<ScanPage> {
         return Scaffold(
           appBar: AppBar(
             //导航栏
-            title: Text("1939W测试Demo".tr),
+            title: Text("Smart Ring"),
             actions: <Widget>[
               Container(
                 margin: const EdgeInsets.only(right: 10),
@@ -355,11 +365,11 @@ class _ScanPageState extends State<ScanPage> {
                         ? Container(
                             width: 25,
                             height: 25,
-                            margin: const EdgeInsets.only(right: 20),
-                            child: const CircularProgressIndicator(
+                            margin: EdgeInsets.only(right: 20),
+                            child: CircularProgressIndicator(
                               strokeWidth: 3.0,
                               backgroundColor: Colors.blue,
-                              valueColor: AlwaysStoppedAnimation<Color>(
+                              valueColor: const AlwaysStoppedAnimation<Color>(
                                 Colors.white,
                               ),
                             ),
@@ -367,15 +377,16 @@ class _ScanPageState extends State<ScanPage> {
                         : Container(
                             width: 25,
                             height: 25,
-                            margin: const EdgeInsets.only(right: 20),
+                            margin: EdgeInsets.only(right: 20),
                           ),
                     GestureDetector(
                       child: Container(
+                        color: Colors.transparent,
                         height: 40,
                         alignment: Alignment.center,
                         child: Text(
                           controller.isScan ? '停止'.tr : '搜索'.tr,
-                          style: const TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 15),
                         ),
                       ),
                       onTap: () {
@@ -390,31 +401,28 @@ class _ScanPageState extends State<ScanPage> {
                   ],
                 ),
               ),
-              GestureDetector(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 20),
-                  color: Colors.transparent,
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Filter',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ),
-                onTap: () {
-                  showFilterDialog();
-                  // print("按键状态-isCh: ${isCh}");
-                  // if(isCh){
-                  //   var locale = Locale('en', 'US');
-                  //   Get.updateLocale(locale);
-                  //   isCh = false;
-                  // }else{
-                  //   var locale = Locale('zh', 'CN');
-                  //   Get.updateLocale(locale);
-                  //   isCh = true;
-                  // }
-                },
-              ),
+              // GestureDetector(
+              //   child: Container(
+              //     margin: EdgeInsets.only(left: 10, right: 20),
+              //     color: Colors.transparent,
+              //     height: 40,
+              //     alignment: Alignment.center,
+              //     child: const Text('Filter', style: TextStyle(fontSize: 15)),
+              //   ),
+              //   onTap: () {
+              //     showFilterDialog();
+              //     // print("按键状态-isCh: ${isCh}");
+              //     // if(isCh){
+              //     //   var locale = Locale('en', 'US');
+              //     //   Get.updateLocale(locale);
+              //     //   isCh = false;
+              //     // }else{
+              //     //   var locale = Locale('zh', 'CN');
+              //     //   Get.updateLocale(locale);
+              //     //   isCh = true;
+              //     // }
+              //   },
+              // ),
             ],
           ),
           body: ListView.builder(

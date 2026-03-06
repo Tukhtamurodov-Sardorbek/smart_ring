@@ -1,8 +1,10 @@
+
 import 'package:ble2301/ble2301_plugin.dart';
 import '../util/app_all_value.dart';
 import '../util/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 
 ///总历史数据
 class AllHistoryDataPage extends StatefulWidget {
@@ -13,14 +15,13 @@ class AllHistoryDataPage extends StatefulWidget {
 }
 
 class _AllHistoryDataPageState extends State<AllHistoryDataPage> {
+
   ///0:读最近的步数详细数据
-  int modeStart = 0;
-
+  int modeStart=0;
   ///2：继续上次读的位置下一段数据
-  int modeContinue = 2;
-
+  int modeContinue=2;
   ///99: 删除步数详细数据
-  int modeDelete = 0x99;
+  int modeDelete=0x99;
 
   List<Map> list = [];
 
@@ -36,32 +37,33 @@ class _AllHistoryDataPageState extends State<AllHistoryDataPage> {
   void initState() {
     super.initState();
 
-    dateController.text =
-        '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}:${DateTime.now().second.toString().padLeft(2, '0')}';
+    dateController.text = '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2,'0')}-${DateTime.now().day.toString().padLeft(2,'0')} ${DateTime.now().hour.toString().padLeft(2,'0')}:${DateTime.now().minute.toString().padLeft(2,'0')}:${DateTime.now().second.toString().padLeft(2,'0')}';
 
-    EventBus().on('dataCallBack', (arg) {
+    EventBus().on('dataCallBack', (arg){
       Map map = arg;
       bool finish = map[DeviceKey.End];
       switch (map[DeviceKey.DataType] as String) {
         case BleConst.GetTotalActivityData:
           list.addAll(map[DeviceKey.Data] as List<Map>);
           dataCount++;
-          if (finish) {
+          if(finish){
             controller.dismissDialog();
-            setState(() {});
+            setState(() {
+            });
           }
-          if (dataCount == 50) {
+          if(dataCount == 50){
             dataCount = 0;
-            if (finish) {
+            if(finish){
               controller.dismissDialog();
-              setState(() {});
-            } else {
-              getDetailData(modeContinue, time);
+              setState(() {
+              });
+            }else{
+              getDetailData(modeContinue,time);
             }
           }
           break;
-      }
-    });
+      }}
+    );
   }
 
   @override
@@ -70,11 +72,10 @@ class _AllHistoryDataPageState extends State<AllHistoryDataPage> {
     EventBus().off('dataCallBack');
   }
 
+
   ///获取数据
-  void getDetailData(int status, String time) {
-    controller.writeData(
-      BleSDK.GetTotalActivityDataWithModeForTime(status, time),
-    );
+  void getDetailData(int status,String time){
+    controller.writeData(BleSDK.GetTotalActivityDataWithModeForTime(status,time));
   }
 
   @override
@@ -89,33 +90,29 @@ class _AllHistoryDataPageState extends State<AllHistoryDataPage> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: ElevatedButton(
-                    child: Text('读取所有数据'.tr),
-                    onPressed: () {
-                      Future.delayed(Duration.zero, () {
-                        controller.showLoadDialog('同步中'.tr);
-                      });
-                      list = [];
-                      time = '';
-                      getDetailData(modeStart, time);
-                    },
-                  ),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(left: 10,right: 10),
+                child: ElevatedButton(
+                  child: Text('读取所有数据'.tr),
+                  onPressed: (){
+                    Future.delayed(Duration.zero,(){
+                      controller.showLoadDialog('同步中'.tr);
+                    });
+                    list = [];
+                    time = '';
+                    getDetailData(modeStart,time);
+                  },
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  child: ElevatedButton(
-                    child: Text('删除'.tr),
-                    onPressed: () {
-                      getDetailData(modeDelete, time);
-                    },
-                  ),
+              )),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: ElevatedButton(
+                  child: Text('删除'.tr),
+                  onPressed: (){
+                    getDetailData(modeDelete,time);
+                  },
                 ),
-              ),
+              ))
             ],
           ),
           Row(
@@ -139,55 +136,49 @@ class _AllHistoryDataPageState extends State<AllHistoryDataPage> {
           ),
           Row(
             children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: ElevatedButton(
-                    child: Text('根据时间获取数据'.tr),
-                    onPressed: () {
-                      // print('length: ${dateController.text.length}');
-                      if (dateController.text.isNotEmpty &&
-                          dateController.text.length == 19) {
-                        Future.delayed(Duration.zero, () {
-                          controller.showLoadDialog('同步中'.tr);
-                        });
-                        list = [];
-                        time = "";
-                        time = dateController.text;
-                        getDetailData(modeStart, time);
-                      }
-                    },
-                  ),
+              Expanded(child: Container(
+                margin: const EdgeInsets.only(left: 10,right: 10),
+                child: ElevatedButton(
+                  child: Text('根据时间获取数据'.tr),
+                  onPressed: (){
+                    // print('length: ${dateController.text.length}');
+                    if(dateController.text.isNotEmpty && dateController.text.length == 19){
+                      Future.delayed(Duration.zero,(){
+                        controller.showLoadDialog('同步中'.tr);
+                      });
+                      list = [];
+                      time = "";
+                      time = dateController.text;
+                      getDetailData(modeStart,time);
+                    }
+                  },
                 ),
-              ),
+              )),
             ],
           ),
-          Expanded(
-            child: list.isEmpty
-                ? Container(alignment: Alignment.center, child: Text('无数据'.tr))
-                : ListView.builder(
-                    padding: const EdgeInsets.only(top: 10),
-                    shrinkWrap: true,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          top: 10,
-                          bottom: 5,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(list[index].toString()),
-                            Container(height: 1, color: Colors.grey),
-                          ],
-                        ),
-                      );
-                    },
+          Expanded(child: list.isEmpty?Container(
+            alignment: Alignment.center,
+            child: Text('无数据'.tr),
+          ):ListView.builder(
+              padding: const EdgeInsets.only(top: 10),
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (context,index){
+                return Container(
+                  padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 5),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(list[index].toString()),
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                      )
+                    ],
                   ),
-          ),
+                );
+              }
+          ))
         ],
       ),
     );

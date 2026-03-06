@@ -1,7 +1,9 @@
+
 //订阅者回调签名
 typedef void EventCallback(arg);
 
 class EventBus {
+
   //私有构造函数
   EventBus._internal();
 
@@ -25,7 +27,7 @@ class EventBus {
     if (list == null) {
       return;
     }
-    if (f == null) {
+    if (f == null){
       // _emap[eventName] = null;
       _emap.remove(eventName);
     } else {
@@ -36,10 +38,10 @@ class EventBus {
   //触发事件，事件触发后该事件所有订阅者会被调用
   void emit(String eventName, [arg]) {
     var list = _emap[eventName];
-    if (list == null) return;
-    int len = list.length - 1;
+    if (list ==null) return;
+    int len = list.length-1;
     //反向遍历，防止订阅者在回调中移除自身带来的下标错位
-    for (var i = len; i > -1; --i) {
+    for (var i=len; i>-1; --i){
       list[i](arg);
     }
   }
